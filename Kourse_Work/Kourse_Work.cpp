@@ -93,7 +93,7 @@ public:
 			cout << "0" << month;
 		}
 		cout << ".";
-		cout << year;
+		cout << year << endl;
 	}
 };
 
@@ -111,13 +111,34 @@ public:
 		sex = true;
 		Birthday.setDate(1,1,2000);
 		uniqueID = "00А0000";
+		EntranceYear.setDate(1,1,2017);
+		study_place.Group = "AAAA-00-00";
+		study_place.Institute = "ИКБ";
+	}
+
+	void StudentSet() {
+		cout << "Ввод";
+		cin >> studentInfo.SurName; cin >> studentInfo.Name; cin >> studentInfo.MiddleName;
+		int Day, Month, Year;
+		cin >> Day >> Month >> Year;
+		Birthday.setDate(Day, Month, Year);
 
 	}
+
+	void printStudent() {
+		cout << studentInfo.SurName << " " << studentInfo.Name << " " << studentInfo.MiddleName << endl;
+		Birthday.printDate(); 
+
+	}
+
 };
 
 void addStudent() {
 	cout << "--- Добавление данных о студенте ---" << endl;
-
+	
+	Student student;
+	student.StudentSet();
+	student.printStudent();
 }
 
 void MainMenu() {
