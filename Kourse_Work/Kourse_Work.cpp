@@ -39,18 +39,11 @@ public:
 		}
 	}
 
-	// Геттер
-	//MyDate getDate() {
-	//	MyDate MD;
-	//	MD.day = day; MD.month = month; MD.year = year;
-	//	return MD;
-	//}
-	// Проверка даты 
 	bool chekDate(unsigned short d, unsigned short m, unsigned short y) {
 		if (m > 0 && m < 13) {
 			unsigned short maxDay;
 			switch (m) {
-			case 2: maxDay = (y % 4 == 0) ? 29 : 28; break;// високосный год
+			case 2: maxDay = (y % 4 == 0) ? 29 : 28; break;
 			case 1: case 3: case 5: case 7:case 8: case 10: case 12: maxDay = 31; break;
 			default: maxDay = 30; break;
 			}
@@ -66,7 +59,7 @@ public:
 		cout << "\nДата не корректна. Исправьте номер месяца, номер месяца не должен быть больше 12. Введенный номер месяца: " << m << endl;
 		return false;
 	}
-	// Редактирование даты
+
 	void addDay(unsigned short delta) {
 		if (chekDate(day + delta, month, year)) {
 			this->day = day;
@@ -123,6 +116,7 @@ public:
 		cin >> Day >> Month >> Year;
 		Birthday.setDate(Day, Month, Year);
 
+
 	}
 
 	void printStudent() {
@@ -139,6 +133,10 @@ void addStudent() {
 	Student student;
 	student.StudentSet();
 	student.printStudent();
+}
+
+void Clear() {
+	cin.clear(); cin.ignore(INT_MAX, '\n');
 }
 
 void MainMenu() {
@@ -179,6 +177,7 @@ void MainMenu() {
 				exit(0);
 			default:
 				cout << "Действие не определено. Повторите выбор действия." << endl;
+				Clear();
 			}
 		}
 	}
