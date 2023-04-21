@@ -97,34 +97,86 @@ private:
 	string uniqueID;
 	Date EntranceYear;
 	StudyPlace study_place;
-	bool sex;
+	bool Gender;
 public:
 	Student() {
 		studentInfo.SurName = "Иванов"; studentInfo.Name = "Иван"; studentInfo.MiddleName = "Иванович";
-		sex = true;
+		Gender = true;
 		Birthday.setDate(1,1,2000);
 		uniqueID = "00А0000";
 		EntranceYear.setDate(1,1,2017);
 		study_place.Group = "AAAA-00-00";
 		study_place.Institute = "ИКБ";
 	}
+	bool check(string& line)
+	{
+		const string NUMBERS = "0123456789";
+
+		for (int x = 0; x < (int)(line.size()); x++)
+		{
+			for (int y = 0; y < (int)(NUMBERS.size()); y++)
+			{
+				if (NUMBERS[y] == line[x])
+					return true;
+			}
+		}
+
+		return false;
+	}
 
 	void StudentSet() {
-		cout << "Ввод";
-		cin >> studentInfo.SurName; cin >> studentInfo.Name; cin >> studentInfo.MiddleName;
+		while (true){
+			cout << "Ввод фамилии: "; cin >> studentInfo.SurName;
+			if (!check(studentInfo.SurName)) { cout << "good" << endl; break; }
+			cout << "bad" << endl;
+			Clear();
+		}
+		while (true) {
+			cout << "Ввод имени: "; cin >> studentInfo.Name;
+			if (!check(studentInfo.Name)) { cout << "good" << endl; break; }
+			cout << "bad" << endl;
+			Clear();
+		}
+		while (true) {
+			cout << "Ввод отчества: "; cin >> studentInfo.MiddleName;
+			if (!check(studentInfo.MiddleName)) { cout << "good" << endl; break; }
+			cout << "bad" << endl;
+			Clear();
+		}
 		int Day, Month, Year;
-		cin >> Day >> Month >> Year;
+		cout << "день"; cin >> Day; cout << endl << "месяц"; cin >> Month; cout << endl << "год"; cin >> Year;
 		Birthday.setDate(Day, Month, Year);
 
+		while (true) {
+			string gender;
+			cout << "Пол: "; cin >> gender;
+			if (!check(gender)) { 
+				if (gender == "м" or gender == "ж") { 
+					if (gender == "м") { Gender = true; }
+					else { Gender = false; }
+					break;
+				}
+				else { cout << "gender bad"; }
+			}
+			cout << "bad" << endl;
+			Clear();
+		}
+
+		cout << "студак: "; cin >> uniqueID;
 
 	}
 
 	void printStudent() {
 		cout << studentInfo.SurName << " " << studentInfo.Name << " " << studentInfo.MiddleName << endl;
 		Birthday.printDate(); 
+		if (Gender = true) { cout << "man"; }
+		else { cout << "woman"; }
 
 	}
 
+	void Clear() {
+		cin.clear(); cin.ignore(INT_MAX, '\n');
+	}
 };
 
 void addStudent() {
