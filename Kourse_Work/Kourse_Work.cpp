@@ -19,9 +19,8 @@ struct StudyPlace {
 };
 
 class Date {
-private:
-	unsigned short day, month, year;
 public:
+	unsigned short day, month, year;
 
 	Date() {
 		day = 0; month = 0; year = 0;
@@ -29,6 +28,10 @@ public:
 
 	Date(unsigned short d, unsigned short m, unsigned short y) {
 		setDate(d, m, y);
+	}
+
+	int GetDate() {
+		return day, month, year;
 	}
 
 	void setDate(unsigned short d, unsigned short m, unsigned short y) {
@@ -91,14 +94,14 @@ public:
 };
 
 class Student {
-private:
+public:
 	student studentInfo;
 	Date Birthday;
 	string uniqueID;
 	Date EntranceYear;
 	StudyPlace study_place;
 	bool Gender;
-public:
+
 	Student() {
 		studentInfo.SurName = "Иванов"; studentInfo.Name = "Иван"; studentInfo.MiddleName = "Иванович";
 		Gender = true;
@@ -152,8 +155,8 @@ public:
 			cout << "Пол: "; cin >> gender;
 			if (!check(gender)) { 
 				if (gender == "м" or gender == "ж") { 
-					if (gender == "м") { Gender = true; }
-					else { Gender = false; }
+					if (gender == "ж") { Gender = false; }
+					else { Gender = true; }
 					break;
 				}
 				else { cout << "gender bad"; }
@@ -164,6 +167,18 @@ public:
 
 		cout << "студак: "; cin >> uniqueID;
 
+		cout << "Год поступления" << endl;
+		cout << "день"; cin >> Day; cout << endl << "месяц"; cin >> Month; cout << endl << "год"; cin >> Year;
+		EntranceYear.setDate(Day, Month, Year);
+
+		cout << "Ввод группы: "; cin >> study_place.Group;
+
+		while (true) {
+			cout << "Ввод института: "; cin >> study_place.Institute;
+			if (!check(study_place.Institute)) { cout << "good" << endl; break; }
+			cout << "bad" << endl;
+			Clear();
+		}
 	}
 
 	void printStudent() {
@@ -185,6 +200,16 @@ void addStudent() {
 	Student student;
 	student.StudentSet();
 	student.printStudent();
+
+	FILE* textFile;
+	fopen_s(&textFile, "textFile.txt", "w+");
+
+	fprintf(textFile, "%s %s %s %s %d %d %d %d %d %d %d %s %s\n", student.uniqueID, student.studentInfo.SurName, student.studentInfo.Name, student.studentInfo.MiddleName,
+			student.Birthday.day, student.Birthday.month, student.Birthday.year,
+			student.Gender, student.EntranceYear.day, student.EntranceYear.month, student.EntranceYear.year,
+			student.study_place.Group, student.study_place.Institute);
+
+	fclose(textFile);
 }
 
 void Clear() {
