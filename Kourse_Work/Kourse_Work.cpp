@@ -154,14 +154,11 @@ public:
 			string gender;
 			cout << "Пол: "; cin >> gender;
 			if (!check(gender)) { 
-				if (gender == "м" or gender == "ж") { 
-					if (gender == "ж") { Gender = false; }
-					else { Gender = true; }
-					break;
-				}
-				else { cout << "gender bad"; }
+				if (gender == "м") { Gender = true; break; }
+				else if (gender == "ж") { Gender = false; break; }
+				else { cout << "gender bad" << endl; }
 			}
-			cout << "bad" << endl;
+			else { cout << "bad" << endl; }
 			Clear();
 		}
 
@@ -184,8 +181,8 @@ public:
 	void printStudent() {
 		cout << studentInfo.SurName << " " << studentInfo.Name << " " << studentInfo.MiddleName << endl;
 		Birthday.printDate(); 
-		if (Gender = true) { cout << "man"; }
-		else { cout << "woman"; }
+		if (Gender = true) { cout << "man" << endl; }
+		else { cout << "woman" << endl; }
 
 	}
 
@@ -201,15 +198,16 @@ void addStudent() {
 	student.StudentSet();
 	student.printStudent();
 
-	FILE* textFile;
-	fopen_s(&textFile, "textFile.txt", "w+");
+	ofstream fout;
+	fout.open("DB_Students.txt", ofstream::app);
 
-	fprintf(textFile, "%s %s %s %s %d %d %d %d %d %d %d %s %s\n", student.uniqueID, student.studentInfo.SurName, student.studentInfo.Name, student.studentInfo.MiddleName,
-			student.Birthday.day, student.Birthday.month, student.Birthday.year,
-			student.Gender, student.EntranceYear.day, student.EntranceYear.month, student.EntranceYear.year,
-			student.study_place.Group, student.study_place.Institute);
+	fout << student.uniqueID << " " << student.studentInfo.SurName << " " <<
+		student.studentInfo.Name << " " << student.studentInfo.MiddleName << " " <<
+		student.Birthday.day << " " << student.Birthday.month << " " << student.Birthday.year << " " <<
+		student.Gender << " " << student.EntranceYear.day << " " << student.EntranceYear.month << " " << student.EntranceYear.year << " " <<
+		student.study_place.Group << " " << student.study_place.Institute << endl;
 
-	fclose(textFile);
+	fout.close();
 }
 
 void Clear() {
@@ -262,7 +260,6 @@ void MainMenu() {
 
 int main()
 {
-	SetConsoleCP(1251);
-	SetConsoleOutputCP(1251);
+	SetConsoleCP(1251); SetConsoleOutputCP(1251);
 	MainMenu();
 }
