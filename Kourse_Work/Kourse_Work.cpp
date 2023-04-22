@@ -3,6 +3,7 @@
 #include <string>
 #include <stdio.h>
 #include <fstream>
+#include <cstdlib>
 
 using namespace std;
 
@@ -183,7 +184,14 @@ public:
 		Birthday.printDate(); 
 		if (Gender = true) { cout << "man" << endl; }
 		else { cout << "woman" << endl; }
+		cout << uniqueID << endl;
+		EntranceYear.printDate();
+		cout << study_place.Group << endl;
+		cout << study_place.Institute << endl;
+	}
 
+	void printShortInfo() {
+		cout << uniqueID << " " << studentInfo.SurName << " " << studentInfo.Name << " " << studentInfo.MiddleName << endl;;
 	}
 
 	void Clear() {
@@ -194,24 +202,67 @@ public:
 void addStudent() {
 	cout << "--- Добавление данных о студенте ---" << endl;
 	
-	Student student;
-	student.StudentSet();
-	student.printStudent();
+	Student student_add;
+	student_add.StudentSet();
+	student_add.printStudent();
 
 	ofstream fout;
 	fout.open("DB_Students.txt", ofstream::app);
 
-	fout << student.uniqueID << " " << student.studentInfo.SurName << " " <<
-		student.studentInfo.Name << " " << student.studentInfo.MiddleName << " " <<
-		student.Birthday.day << " " << student.Birthday.month << " " << student.Birthday.year << " " <<
-		student.Gender << " " << student.EntranceYear.day << " " << student.EntranceYear.month << " " << student.EntranceYear.year << " " <<
-		student.study_place.Group << " " << student.study_place.Institute << endl;
+	fout << student_add.uniqueID << " " << student_add.studentInfo.SurName << " " <<
+		student_add.studentInfo.Name << " " << student_add.studentInfo.MiddleName << " " <<
+		student_add.Birthday.day << " " << student_add.Birthday.month << " " << student_add.Birthday.year << " " <<
+		student_add.Gender << " " << student_add.EntranceYear.day << " " << student_add.EntranceYear.month << " " << student_add.EntranceYear.year << " " <<
+		student_add.study_place.Group << " " << student_add.study_place.Institute << endl;
 
 	fout.close();
 }
 
 void Clear() {
 	cin.clear(); cin.ignore(INT_MAX, '\n');
+}
+
+int line_count() {
+	int x = 0;
+	ifstream f("DB_Students.txt");
+	while (true)
+	{
+		string v;
+		getline(f, v);
+		if (!f.eof())
+			x++;
+		else
+			break;
+	}
+	return x;
+}
+
+void getStudent() {
+	cout << "--- Вывод данных о студенте ---" << endl;
+
+	int LineCount = line_count();
+	Student student_see;
+	Student* arr = new Student[LineCount];
+	ifstream in("DB_Students.txt"); 
+
+	for (int i = 0; i < LineCount; i++) {
+		in >> student_see.uniqueID >> student_see.studentInfo.SurName >>
+			student_see.studentInfo.Name >> student_see.studentInfo.MiddleName >>
+			student_see.Birthday.day >> student_see.Birthday.month >> student_see.Birthday.year >>
+			student_see.Gender >> student_see.EntranceYear.day >> student_see.EntranceYear.month >> student_see.EntranceYear.year >>
+			student_see.study_place.Group >> student_see.study_place.Institute;
+
+		arr[i] = student_see;
+
+		cout << i + 1 << ". "; student_see.printShortInfo();
+	}
+	cout << endl;
+	in.close();
+
+	int option;
+	cout << "more info: "; cin >> option;
+
+	delete[]arr;
 }
 
 void MainMenu() {
@@ -236,7 +287,7 @@ void MainMenu() {
 				Return = false;
 				break;
 			case 2:
-				cout << "Функция отображения данных о студенте в разработке. Приносим свои извинения" << endl;
+				getStudent();
 				Return = false;
 				break;
 			case 3:
