@@ -202,20 +202,28 @@ public:
 void addStudent() {
 	cout << "--- Добавление данных о студенте ---" << endl;
 	
-	Student student_add;
-	student_add.StudentSet();
-	student_add.printStudent();
+	bool chek = true;
+	while (chek == true) {
+		Student student_add;
+		student_add.StudentSet();
 
-	ofstream fout;
-	fout.open("DB_Students.txt", ofstream::app);
+		ofstream fout;
+		fout.open("DB_Students.txt", ofstream::app);
 
-	fout << student_add.uniqueID << " " << student_add.studentInfo.SurName << " " <<
-		student_add.studentInfo.Name << " " << student_add.studentInfo.MiddleName << " " <<
-		student_add.Birthday.day << " " << student_add.Birthday.month << " " << student_add.Birthday.year << " " <<
-		student_add.Gender << " " << student_add.EntranceYear.day << " " << student_add.EntranceYear.month << " " << student_add.EntranceYear.year << " " <<
-		student_add.study_place.Group << " " << student_add.study_place.Institute << endl;
+		fout << student_add.uniqueID << " " << student_add.studentInfo.SurName << " " <<
+			student_add.studentInfo.Name << " " << student_add.studentInfo.MiddleName << " " <<
+			student_add.Birthday.day << " " << student_add.Birthday.month << " " << student_add.Birthday.year << " " <<
+			student_add.Gender << " " << student_add.EntranceYear.day << " " << student_add.EntranceYear.month << " " << student_add.EntranceYear.year << " " <<
+			student_add.study_place.Group << " " << student_add.study_place.Institute << endl;
 
-	fout.close();
+		fout.close();
+		unsigned short int option;
+		cout << "Добавить еще одного студента? (1 - да, 2 - нет): "; cin >> option;
+		switch (option) {
+		case 1: break;
+		case 2: chek = false; break;
+		}
+	}
 }
 
 void Clear() {
@@ -238,12 +246,10 @@ int line_count() {
 }
 
 void getStudent() {
-	cout << "--- Вывод данных о студенте ---" << endl;
-
 	int LineCount = line_count();
 	Student student_see;
 	Student* arr = new Student[LineCount];
-	ifstream in("DB_Students.txt"); 
+	ifstream in("DB_Students.txt");
 
 	for (int i = 0; i < LineCount; i++) {
 		in >> student_see.uniqueID >> student_see.studentInfo.SurName >>
@@ -253,6 +259,41 @@ void getStudent() {
 			student_see.study_place.Group >> student_see.study_place.Institute;
 
 		arr[i] = student_see;
+	}
+	in.close();
+	
+	bool chek = true;
+	while (chek == true) {
+		string unique_id; bool flag = false;
+		cout << "Введите номер студенческого билета: "; cin >> unique_id;
+		for (int i = 0; i < LineCount; i++) {
+			if (arr[i].uniqueID == unique_id) { arr[i].printStudent(); flag = true; break; }
+		}
+		if (flag == false){ cout << "Студента с таким номером студенческого билета нет." << endl; }
+
+		unsigned short int option;
+		cout << "Совершить поиск еще раз? (1 - да, 2 - нет): "; cin >> option;
+		switch (option) {
+		case 1: break;
+		case 2: chek = false; break;
+		}
+	}
+	delete[]arr;
+}
+
+void getAllStudents() {
+	cout << "--- Вывод данных о студенте ---" << endl;
+
+	int LineCount = line_count();
+	Student student_see;
+	ifstream in("DB_Students.txt"); 
+
+	for (int i = 0; i < LineCount; i++) {
+		in >> student_see.uniqueID >> student_see.studentInfo.SurName >>
+			student_see.studentInfo.Name >> student_see.studentInfo.MiddleName >>
+			student_see.Birthday.day >> student_see.Birthday.month >> student_see.Birthday.year >>
+			student_see.Gender >> student_see.EntranceYear.day >> student_see.EntranceYear.month >> student_see.EntranceYear.year >>
+			student_see.study_place.Group >> student_see.study_place.Institute;
 
 		cout << i + 1 << ". "; student_see.printShortInfo();
 	}
@@ -260,20 +301,23 @@ void getStudent() {
 	in.close();
 
 	int option;
-	cout << "more info: "; cin >> option;
-
-	delete[]arr;
+	cout << "more info?: "; cin >> option;
+	switch (option) {
+	case 1: getStudent(); break;
+	case 2: break;
+	}
 }
 
 void MainMenu() {
 	while (true) {
-		cout << "======== ГЛАВНОЕ МЕНЮ ========" << endl;
-		cout << "--- Введите номер действия ---" << endl;
-		cout << "1 - Добавить данные о студенте" << endl;
-		cout << "2 - Показать данные о студенте" << endl;
-		cout << "3 - Изменить данные о студенте" << endl;
-		cout << "4 - Удалить данные о студенте" << endl;
-		cout << "5 - Выйти из программы" << endl << endl;
+		cout << "========== ГЛАВНОЕ МЕНЮ ==========" << endl;
+		cout << "----- Введите номер действия -----" << endl;
+		cout << "1 - Добавить    данные    студента" << endl;
+		cout << "2 - Показать данные всех студентов" << endl;
+		cout << "3 - Показать    данные    студента" << endl;
+		cout << "4 - Изменить    данные    студента" << endl;
+		cout << "5 - Удалить     данные    студента" << endl;
+		cout << "6 - Выйти       из       программы" << endl << endl;
 
 		bool Return = true;
 		while (Return == true) {
@@ -287,18 +331,22 @@ void MainMenu() {
 				Return = false;
 				break;
 			case 2:
-				getStudent();
+				getAllStudents();
 				Return = false;
 				break;
 			case 3:
-				cout << "Функция изменения данных о студенте в разработке. Приносим свои извинения" << endl;
+				getStudent();
 				Return = false;
 				break;
 			case 4:
-				cout << "Функция удаления данных о студенте в разработке. Приносим свои извинения" << endl;
+				cout << "Функция изменения данных о студенте в разработке. Приносим свои извинения" << endl;
 				Return = false;
 				break;
 			case 5:
+				cout << "Функция удаления данных о студенте в разработке. Приносим свои извинения" << endl;
+				Return = false;
+				break;
+			case 6:
 				cout << "До свидания!" << endl;
 				exit(0);
 			default:
