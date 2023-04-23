@@ -308,53 +308,6 @@ void getAllStudents() {
 	}
 }
 
-void deleteStudent() {
-	int LineCount = line_count();
-	Student student_see;
-	Student* arr = new Student[LineCount];
-	ifstream in("DB_Students.txt");
-
-	for (int i = 0; i < LineCount; i++) {
-		in >> student_see.uniqueID >> student_see.studentInfo.SurName >>
-			student_see.studentInfo.Name >> student_see.studentInfo.MiddleName >>
-			student_see.Birthday.day >> student_see.Birthday.month >> student_see.Birthday.year >>
-			student_see.Gender >> student_see.EntranceYear.day >> student_see.EntranceYear.month >> student_see.EntranceYear.year >>
-			student_see.study_place.Group >> student_see.study_place.Institute;
-
-		arr[i] = student_see;
-	}
-	in.close();
-
-	int x;
-	string unique_id; bool flag = false;
-	cout << "Введите номер студенческого билета: "; cin >> unique_id;
-	for (int i = 0; i < LineCount; i++) {
-		if (arr[i].uniqueID == unique_id) { cout << "Этот студент будет удален:" << endl; arr[i].printStudent(); x = i; flag = true; break; }
-	}
-	if (flag == false) { cout << "Студента с таким номером студенческого билета нет." << endl; }
-
-	ofstream ofs;
-	ofs.open("DB_Students.txt", std::ofstream::out | std::ofstream::trunc);
-	ofs.close();
-
-	ofstream fout;
-	fout.open("DB_Students.txt", ofstream::app);
-
-	for (int i = 0; i < LineCount; i++) {
-		if (arr[i].uniqueID != arr[x].uniqueID) {
-			fout << arr[i].uniqueID << " " << arr[i].studentInfo.SurName << " " <<
-				arr[i].studentInfo.Name << " " << arr[i].studentInfo.MiddleName << " " <<
-				arr[i].Birthday.day << " " << arr[i].Birthday.month << " " << arr[i].Birthday.year << " " <<
-				arr[i].Gender << " " << arr[i].EntranceYear.day << " " << arr[i].EntranceYear.month << " " << arr[i].EntranceYear.year << " " <<
-				arr[i].study_place.Group << " " << arr[i].study_place.Institute << endl;
-		}
-	}
-
-	fout.close();
-
-	delete[]arr;
-}
-
 void MainMenu() {
 	while (true) {
 		cout << "========== ГЛАВНОЕ МЕНЮ ==========" << endl;
@@ -390,7 +343,7 @@ void MainMenu() {
 				Return = false;
 				break;
 			case 5:
-				deleteStudent();
+				cout << "Функция удаления данных о студенте в разработке. Приносим свои извинения" << endl;
 				Return = false;
 				break;
 			case 6:
