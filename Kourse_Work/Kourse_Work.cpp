@@ -106,9 +106,9 @@ public:
 	Student() {
 		studentInfo.SurName = "Иванов"; studentInfo.Name = "Иван"; studentInfo.MiddleName = "Иванович";
 		Gender = true;
-		Birthday.setDate(1,1,2000);
+		Birthday.setDate(1, 1, 2000);
 		uniqueID = "00А0000";
-		EntranceYear.setDate(1,1,2017);
+		EntranceYear.setDate(1, 1, 2017);
 		study_place.Group = "AAAA-00-00";
 		study_place.Institute = "ИКБ";
 	}
@@ -129,7 +129,7 @@ public:
 	}
 
 	void StudentSet() {
-		while (true){
+		while (true) {
 			cout << "Ввод фамилии: "; cin >> studentInfo.SurName;
 			if (!check(studentInfo.SurName)) { cout << "good" << endl; break; }
 			cout << "bad" << endl;
@@ -154,7 +154,7 @@ public:
 		while (true) {
 			string gender;
 			cout << "Пол: "; cin >> gender;
-			if (!check(gender)) { 
+			if (!check(gender)) {
 				if (gender == "м") { Gender = true; break; }
 				else if (gender == "ж") { Gender = false; break; }
 				else { cout << "gender bad" << endl; }
@@ -181,7 +181,7 @@ public:
 
 	void printStudent() {
 		cout << studentInfo.SurName << " " << studentInfo.Name << " " << studentInfo.MiddleName << endl;
-		Birthday.printDate(); 
+		Birthday.printDate();
 		if (Gender = true) { cout << "man" << endl; }
 		else { cout << "woman" << endl; }
 		cout << uniqueID << endl;
@@ -201,7 +201,7 @@ public:
 
 void addStudent() {
 	cout << "--- Добавление данных о студенте ---" << endl;
-	
+
 	bool chek = true;
 	while (chek == true) {
 		Student student_add;
@@ -245,6 +245,53 @@ int line_count() {
 	return x;
 }
 
+void deleteStudent() {
+	int LineCount = line_count();
+	Student student_see;
+	Student* arr = new Student[LineCount];
+	ifstream in("DB_Students.txt");
+
+	for (int i = 0; i < LineCount; i++) {
+		in >> student_see.uniqueID >> student_see.studentInfo.SurName >>
+			student_see.studentInfo.Name >> student_see.studentInfo.MiddleName >>
+			student_see.Birthday.day >> student_see.Birthday.month >> student_see.Birthday.year >>
+			student_see.Gender >> student_see.EntranceYear.day >> student_see.EntranceYear.month >> student_see.EntranceYear.year >>
+			student_see.study_place.Group >> student_see.study_place.Institute;
+
+		arr[i] = student_see;
+	}
+	in.close();
+
+	int x;
+	string unique_id; bool flag = false;
+	cout << "Введите номер студенческого билета: "; cin >> unique_id;
+	for (int i = 0; i < LineCount; i++) {
+		if (arr[i].uniqueID == unique_id) { cout << "Этот студент будет удален:" << endl; arr[i].printStudent(); x = i; flag = true; break; }
+	}
+	if (flag == false) { cout << "Студента с таким номером студенческого билета нет." << endl; }
+
+	ofstream ofs;
+	ofs.open("DB_Students.txt", std::ofstream::out | std::ofstream::trunc);
+	ofs.close();
+
+	ofstream fout;
+	fout.open("DB_Students.txt", ofstream::app);
+
+	for (int i = 0; i < LineCount; i++) {
+		if (arr[i].uniqueID != arr[x].uniqueID) {
+			fout << arr[i].uniqueID << " " << arr[i].studentInfo.SurName << " " <<
+				arr[i].studentInfo.Name << " " << arr[i].studentInfo.MiddleName << " " <<
+				arr[i].Birthday.day << " " << arr[i].Birthday.month << " " << arr[i].Birthday.year << " " <<
+				arr[i].Gender << " " << arr[i].EntranceYear.day << " " << arr[i].EntranceYear.month << " " << arr[i].EntranceYear.year << " " <<
+				arr[i].study_place.Group << " " << arr[i].study_place.Institute << endl;
+		}
+	}
+
+	fout.close();
+
+	delete[]arr;
+}
+
 void getStudent() {
 	int LineCount = line_count();
 	Student student_see;
@@ -261,7 +308,7 @@ void getStudent() {
 		arr[i] = student_see;
 	}
 	in.close();
-	
+
 	bool chek = true;
 	while (chek == true) {
 		string unique_id; bool flag = false;
@@ -269,7 +316,7 @@ void getStudent() {
 		for (int i = 0; i < LineCount; i++) {
 			if (arr[i].uniqueID == unique_id) { arr[i].printStudent(); flag = true; break; }
 		}
-		if (flag == false){ cout << "Студента с таким номером студенческого билета нет." << endl; }
+		if (flag == false) { cout << "Студента с таким номером студенческого билета нет." << endl; }
 
 		unsigned short int option;
 		cout << "Совершить поиск еще раз? (1 - да, 2 - нет): "; cin >> option;
@@ -286,7 +333,7 @@ void getAllStudents() {
 
 	int LineCount = line_count();
 	Student student_see;
-	ifstream in("DB_Students.txt"); 
+	ifstream in("DB_Students.txt");
 
 	for (int i = 0; i < LineCount; i++) {
 		in >> student_see.uniqueID >> student_see.studentInfo.SurName >>
@@ -343,7 +390,7 @@ void MainMenu() {
 				Return = false;
 				break;
 			case 5:
-				cout << "Функция удаления данных о студенте в разработке. Приносим свои извинения" << endl;
+				deleteStudent();
 				Return = false;
 				break;
 			case 6:
