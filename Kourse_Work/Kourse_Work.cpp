@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <fstream>
 #include <cstdlib>
+#include <cstdio>
 
 using namespace std;
 
@@ -112,6 +113,7 @@ public:
 		study_place.Group = "AAAA-00-00";
 		study_place.Institute = "ИКБ";
 	}
+
 	bool check(string& line)
 	{
 		const string NUMBERS = "0123456789";
@@ -182,8 +184,8 @@ public:
 	void printStudent() {
 		cout << studentInfo.SurName << " " << studentInfo.Name << " " << studentInfo.MiddleName << endl;
 		Birthday.printDate();
-		if (Gender = true) { cout << "man" << endl; }
-		else { cout << "woman" << endl; }
+		if (Gender = false) { cout << "woman" << endl; }
+		else { cout << "man" << endl; }
 		cout << uniqueID << endl;
 		EntranceYear.printDate();
 		cout << study_place.Group << endl;
@@ -247,85 +249,101 @@ int line_count() {
 
 void deleteStudent() {
 	int LineCount = line_count();
-	Student student_see;
-	Student* arr = new Student[LineCount];
-	ifstream in("DB_Students.txt");
-
-	for (int i = 0; i < LineCount; i++) {
-		in >> student_see.uniqueID >> student_see.studentInfo.SurName >>
-			student_see.studentInfo.Name >> student_see.studentInfo.MiddleName >>
-			student_see.Birthday.day >> student_see.Birthday.month >> student_see.Birthday.year >>
-			student_see.Gender >> student_see.EntranceYear.day >> student_see.EntranceYear.month >> student_see.EntranceYear.year >>
-			student_see.study_place.Group >> student_see.study_place.Institute;
-
-		arr[i] = student_see;
-	}
-	in.close();
-
-	int x;
-	string unique_id; bool flag = false;
-	cout << "Введите номер студенческого билета: "; cin >> unique_id;
-	for (int i = 0; i < LineCount; i++) {
-		if (arr[i].uniqueID == unique_id) { cout << "Этот студент будет удален:" << endl; arr[i].printStudent(); x = i; flag = true; break; }
-	}
-	if (flag == false) { cout << "Студента с таким номером студенческого билета нет." << endl; }
-
-	ofstream ofs;
-	ofs.open("DB_Students.txt", std::ofstream::out | std::ofstream::trunc);
-	ofs.close();
-
-	ofstream fout;
-	fout.open("DB_Students.txt", ofstream::app);
-
-	for (int i = 0; i < LineCount; i++) {
-		if (arr[i].uniqueID != arr[x].uniqueID) {
-			fout << arr[i].uniqueID << " " << arr[i].studentInfo.SurName << " " <<
-				arr[i].studentInfo.Name << " " << arr[i].studentInfo.MiddleName << " " <<
-				arr[i].Birthday.day << " " << arr[i].Birthday.month << " " << arr[i].Birthday.year << " " <<
-				arr[i].Gender << " " << arr[i].EntranceYear.day << " " << arr[i].EntranceYear.month << " " << arr[i].EntranceYear.year << " " <<
-				arr[i].study_place.Group << " " << arr[i].study_place.Institute << endl;
-		}
-	}
-
-	fout.close();
-
-	delete[]arr;
-}
-
-void getStudent() {
-	int LineCount = line_count();
-	Student student_see;
-	Student* arr = new Student[LineCount];
-	ifstream in("DB_Students.txt");
-
-	for (int i = 0; i < LineCount; i++) {
-		in >> student_see.uniqueID >> student_see.studentInfo.SurName >>
-			student_see.studentInfo.Name >> student_see.studentInfo.MiddleName >>
-			student_see.Birthday.day >> student_see.Birthday.month >> student_see.Birthday.year >>
-			student_see.Gender >> student_see.EntranceYear.day >> student_see.EntranceYear.month >> student_see.EntranceYear.year >>
-			student_see.study_place.Group >> student_see.study_place.Institute;
-
-		arr[i] = student_see;
-	}
-	in.close();
 
 	bool chek = true;
 	while (chek == true) {
-		string unique_id; bool flag = false;
+		string unique_id;
 		cout << "Введите номер студенческого билета: "; cin >> unique_id;
+
+		ifstream in("DB_Students.txt");
+		bool flag = false;
 		for (int i = 0; i < LineCount; i++) {
-			if (arr[i].uniqueID == unique_id) { arr[i].printStudent(); flag = true; break; }
+			Student student_see;
+			in >> student_see.uniqueID >> student_see.studentInfo.SurName >>
+				student_see.studentInfo.Name >> student_see.studentInfo.MiddleName >>
+				student_see.Birthday.day >> student_see.Birthday.month >> student_see.Birthday.year >>
+				student_see.Gender >> student_see.EntranceYear.day >> student_see.EntranceYear.month >> student_see.EntranceYear.year >>
+				student_see.study_place.Group >> student_see.study_place.Institute;
+			if (student_see.uniqueID == unique_id) {
+				flag = true; cout << "Этот студент будет удален из базы: "; student_see.printShortInfo(); break;
+			}
 		}
 		if (flag == false) { cout << "Студента с таким номером студенческого билета нет." << endl; }
 
+		in.close();
+
+		if (flag) {
+			ifstream in("DB_Students.txt");
+			for (int i = 0; i < LineCount; i++) {
+				Student student_see;
+				in >> student_see.uniqueID >> student_see.studentInfo.SurName >>
+					student_see.studentInfo.Name >> student_see.studentInfo.MiddleName >>
+					student_see.Birthday.day >> student_see.Birthday.month >> student_see.Birthday.year >>
+					student_see.Gender >> student_see.EntranceYear.day >> student_see.EntranceYear.month >> student_see.EntranceYear.year >>
+					student_see.study_place.Group >> student_see.study_place.Institute;
+
+				ofstream fout;
+				fout.open("DB_Students_temp.txt", ofstream::app);
+
+				if (student_see.uniqueID != unique_id) {
+					fout << student_see.uniqueID << " " << student_see.studentInfo.SurName << " " <<
+						student_see.studentInfo.Name << " " << student_see.studentInfo.MiddleName << " " <<
+						student_see.Birthday.day << " " << student_see.Birthday.month << " " << student_see.Birthday.year << " " <<
+						student_see.Gender << " " << student_see.EntranceYear.day << " " << student_see.EntranceYear.month << " " << student_see.EntranceYear.year << " " <<
+						student_see.study_place.Group << " " << student_see.study_place.Institute << endl;
+				}
+				fout.close();
+
+			}
+			in.close();
+			string file_name = "DB_Students.txt";
+			remove(file_name.c_str());
+
+			char oldfilename[] = "DB_Students_temp.txt";
+			char newfilename[] = "DB_Students.txt";
+			rename(oldfilename, newfilename);
+		}
+		
 		unsigned short int option;
-		cout << "Совершить поиск еще раз? (1 - да, 2 - нет): "; cin >> option;
+		cout << "Удалить кого-то еще? (1 - да, 2 - нет): "; cin >> option;
 		switch (option) {
 		case 1: break;
 		case 2: chek = false; break;
 		}
 	}
-	delete[]arr;
+}
+
+void getStudent() {
+	int LineCount = line_count();
+
+	bool chek = true;
+	while (chek == true) {
+		ifstream in("DB_Students.txt");
+		string unique_id; bool flag = false;
+		cout << "Введите номер студенческого билета: "; cin >> unique_id;
+		for (int i = 0; i < LineCount; i++) {
+			Student student_see;
+			in >> student_see.uniqueID >> student_see.studentInfo.SurName >>
+				student_see.studentInfo.Name >> student_see.studentInfo.MiddleName >>
+				student_see.Birthday.day >> student_see.Birthday.month >> student_see.Birthday.year >>
+				student_see.Gender >> student_see.EntranceYear.day >> student_see.EntranceYear.month >> student_see.EntranceYear.year >>
+				student_see.study_place.Group >> student_see.study_place.Institute;
+
+			if (student_see.uniqueID == unique_id) {
+				student_see.printStudent(); flag = true; break;
+			}
+
+		}
+		if (flag == false) { cout << "Студента с таким номером студенческого билета нет." << endl; }
+
+		unsigned short int option;
+		cout << "Совершить поиск еще раз? (1 - да, 2 - нет): "; cin >> option;
+		in.close();
+		switch (option) {
+		case 1: flag = true;  break;
+		case 2: chek = false; break;
+		}
+	}
 }
 
 void getAllStudents() {
