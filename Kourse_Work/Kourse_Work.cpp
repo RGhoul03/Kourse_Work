@@ -415,8 +415,19 @@ void editStudent() {
 		Student* ed_stud = new Student(student_see);
 		editLogic(flag, *ed_stud);
 
-		cout << "Измененные данные" << endl;
+		cout << "Измененные данные:" << endl;
 		ed_stud->printStudent();
+
+		ofstream fout;
+		fout.open("DB_Students.txt", ofstream::app);
+
+		fout << ed_stud->uniqueID << " " << ed_stud->studentInfo.SurName << " " <<
+			ed_stud->studentInfo.Name << " " << ed_stud->studentInfo.MiddleName << " " <<
+			ed_stud->Birthday.day << " " << ed_stud->Birthday.month << " " << ed_stud->Birthday.year << " " <<
+			ed_stud->Gender << " " << ed_stud->EntranceYear.day << " " << ed_stud->EntranceYear.month << " " << ed_stud->EntranceYear.year << " " <<
+			ed_stud->study_place.Group << " " << ed_stud->study_place.Institute << endl;
+
+		fout.close();
 
 		unsigned short int option;
 		cout << "Изменить чьи-то еще данные?? (1 - да, 2 - нет): "; cin >> option;
