@@ -232,19 +232,33 @@ void Clear() {
 	cin.clear(); cin.ignore(INT_MAX, '\n');
 }
 
+bool FileIsExist(std::string filePath) {
+	bool isExist = false;
+	std::ifstream fin(filePath.c_str());
+
+	if (fin.is_open())
+		isExist = true;
+
+	fin.close();
+	return isExist;
+}
+
 int line_count() {
-	int x = 0;
-	ifstream f("DB_Students.txt");
-	while (true)
-	{
-		string v;
-		getline(f, v);
-		if (!f.eof())
-			x++;
-		else
-			break;
+	if (FileIsExist("DB_Students.txt")) {
+		int x = 0;
+		ifstream f("DB_Students.txt");
+		while (true)
+		{
+			string v;
+			getline(f, v);
+			if (!f.eof())
+				x++;
+			else
+				break;
+		}
+		return x;
 	}
-	return x;
+	else { return 0; }
 }
 
 void delLogic(bool flag, string UID) {
@@ -345,34 +359,35 @@ void editLogic(bool flag, Student& editStud) {
 				Return = false;
 				break;
 			case 2:
-				cout << "Введите новую фамилию" << endl; cin >> editStud.studentInfo.SurName;
+				cout << "Введите новую фамилию: " << endl; cin >> editStud.studentInfo.SurName;
 				Return = false;
 				break;
 			case 3:
-				cout << "Введите новое отчество" << endl; cin >> editStud.studentInfo.MiddleName;
+				cout << "Введите новое отчество: " << endl; cin >> editStud.studentInfo.MiddleName;
 				Return = false;
 				break;
 			case 4:
+				cout << "Введите новую дату дня рождения:" << endl;
 				cout << "день"; cin >> Day; cout << endl << "месяц"; cin >> Month; cout << endl << "год"; cin >> Year;
 				editStud.Birthday.setDate(Day, Month, Year);
 				Return = false;
 				break;
 			case 5:
-				cout << "В разработке" << endl;
+				cout << "Введите новый номер студенческого билета: " << endl; cin >> editStud.uniqueID;
 				Return = false;
 				break;
 			case 6:
+				cout << "Введите новую дату поступления:" << endl;
 				cout << "день"; cin >> Day; cout << endl << "месяц"; cin >> Month; cout << endl << "год"; cin >> Year;
 				editStud.EntranceYear.setDate(Day, Month, Year);
-				cout << "В разработке" << endl;
 				Return = false;
 				break;
 			case 7:
-				cout << "В разработке" << endl;
+				cout << "Введите новый номер группы: " << endl; cin >> editStud.study_place.Group;
 				Return = false;
 				break;
 			case 8:
-				cout << "В разработке" << endl;
+				cout << "Введите новый номер института: " << endl; cin >> editStud.study_place.Institute;
 				Return = false;
 				break;
 			case 9:
@@ -508,6 +523,11 @@ void MainMenu() {
 		cout << "4 - Изменить    данные    студента" << endl;
 		cout << "5 - Удалить     данные    студента" << endl;
 		cout << "6 - Выйти       из       программы" << endl << endl;
+
+		if (line_count() == 0) {
+			cout << "База данных пуста! Вывод, изменение и удаление данных не доступны!" << endl;
+			cout << "Вы можете добавить новые данные." << endl;
+		}
 
 		bool Return = true;
 		while (Return == true) {
