@@ -102,7 +102,7 @@ public:
 	string uniqueID;
 	Date EntranceYear;
 	StudyPlace study_place;
-	bool Gender;
+	unsigned short int Gender;
 
 	Student() {
 		studentInfo.SurName = "Иванов"; studentInfo.Name = "Иван"; studentInfo.MiddleName = "Иванович";
@@ -133,20 +133,20 @@ public:
 	void StudentSet() {
 		while (true) {
 			cout << "Ввод фамилии: "; cin >> studentInfo.SurName;
-			if (!check(studentInfo.SurName)) { cout << "good" << endl; break; }
-			cout << "bad" << endl;
+			if (!check(studentInfo.SurName)) { break; }
+			cout << "Вы ввели что-то не так." << endl;
 			Clear();
 		}
 		while (true) {
 			cout << "Ввод имени: "; cin >> studentInfo.Name;
-			if (!check(studentInfo.Name)) { cout << "good" << endl; break; }
-			cout << "bad" << endl;
+			if (!check(studentInfo.Name)) { break; }
+			cout << "Вы ввели что-то не так." << endl;
 			Clear();
 		}
 		while (true) {
 			cout << "Ввод отчества: "; cin >> studentInfo.MiddleName;
-			if (!check(studentInfo.MiddleName)) { cout << "good" << endl; break; }
-			cout << "bad" << endl;
+			if (!check(studentInfo.MiddleName)) { break; }
+			cout << "Вы ввели что-то не так." << endl;
 			Clear();
 		}
 		int Day, Month, Year;
@@ -157,11 +157,10 @@ public:
 			string gender;
 			cout << "Пол: "; cin >> gender;
 			if (!check(gender)) {
-				if (gender == "м") { Gender = true; break; }
-				else if (gender == "ж") { Gender = false; break; }
-				else { cout << "gender bad" << endl; }
+				if (gender == "м") { Gender = 1; break; }
+				else if (gender == "ж") { Gender = 0; break; }
+				else { cout << "Такого пола не существует. Поменяй." << endl; }
 			}
-			else { cout << "bad" << endl; }
 			Clear();
 		}
 
@@ -175,8 +174,8 @@ public:
 
 		while (true) {
 			cout << "Ввод института: "; cin >> study_place.Institute;
-			if (!check(study_place.Institute)) { cout << "good" << endl; break; }
-			cout << "bad" << endl;
+			if (!check(study_place.Institute)) { break; }
+			cout << "Вы ввели что-то не так." << endl;
 			Clear();
 		}
 	}
@@ -184,8 +183,8 @@ public:
 	void printStudent() {
 		cout << studentInfo.SurName << " " << studentInfo.Name << " " << studentInfo.MiddleName << endl;
 		Birthday.printDate();
-		if (Gender = false) { cout << "woman" << endl; }
-		else { cout << "man" << endl; }
+		if (Gender == 0) { cout << "Женщина" << endl; }
+		else{ cout << "Мужчина" << endl; }
 		cout << uniqueID << endl;
 		EntranceYear.printDate();
 		cout << study_place.Group << endl;
@@ -200,6 +199,22 @@ public:
 		cin.clear(); cin.ignore(INT_MAX, '\n');
 	}
 };
+
+bool check(string& line)
+{
+	const string NUMBERS = "0123456789";
+
+	for (int x = 0; x < (int)(line.size()); x++)
+	{
+		for (int y = 0; y < (int)(NUMBERS.size()); y++)
+		{
+			if (NUMBERS[y] == line[x])
+				return true;
+		}
+	}
+
+	return false;
+}
 
 void addStudent() {
 	cout << "--- Добавление данных о студенте ---" << endl;
@@ -219,11 +234,15 @@ void addStudent() {
 			student_add.study_place.Group << " " << student_add.study_place.Institute << endl;
 
 		fout.close();
-		unsigned short int option;
-		cout << "Добавить еще одного студента? (1 - да, 2 - нет): "; cin >> option;
-		switch (option) {
-		case 1: break;
-		case 2: chek = false; break;
+
+		bool Return = true;
+		while (Return == true) {
+			unsigned short int option;
+			cout << "Добавить еще одного студента? (1 - да, 2 - нет): "; cin >> option;
+			switch (option) {
+			case 1: break;
+			case 2: chek = false; break;
+			}
 		}
 	}
 }
@@ -325,11 +344,15 @@ void deleteStudent() {
 
 		delLogic(flag, unique_id);
 		
-		unsigned short int option;
-		cout << "Удалить кого-то еще? (1 - да, 2 - нет): "; cin >> option;
-		switch (option) {
-		case 1: break;
-		case 2: chek = false; break;
+		bool Return = true;
+		while (Return == true) {
+			unsigned short int option;
+			cout << "Удалить кого-то еще? (1 - да, 2 - нет): "; cin >> option;
+			switch (option) {
+			case 1: break;
+			case 2: chek = false; break;
+			default: cout << "Действие не определено. Повторите выбор действия." << endl; Clear();
+			}
 		}
 	}
 }
@@ -355,16 +378,28 @@ void editLogic(bool flag, Student& editStud) {
 			switch (option)
 			{
 			case 1:
-				cout << "Введите новое имя: " << endl; cin >> editStud.studentInfo.Name;
-				Return = false;
+				while (true) {
+					cout << "Введите новое имя: "; cin >> editStud.studentInfo.Name;
+					if (!check(editStud.studentInfo.Name)) { Return = false; break; }
+					cout << "bad" << endl;
+					Clear();
+				}
 				break;
 			case 2:
-				cout << "Введите новую фамилию: " << endl; cin >> editStud.studentInfo.SurName;
-				Return = false;
+				while (true) {
+					cout << "Введите новую фамилию: "; cin >> editStud.studentInfo.SurName;
+					if (!check(editStud.studentInfo.SurName)) { Return = false; break; }
+					cout << "bad" << endl;
+					Clear();
+				}
 				break;
 			case 3:
-				cout << "Введите новое отчество: " << endl; cin >> editStud.studentInfo.MiddleName;
-				Return = false;
+				while (true) {
+					cout << "Введите новое отчество: "; cin >> editStud.studentInfo.MiddleName;
+					if (!check(editStud.studentInfo.MiddleName)) { Return = false; break; }
+					cout << "bad" << endl;
+					Clear();
+				}
 				break;
 			case 4:
 				cout << "Введите новую дату дня рождения:" << endl;
@@ -387,8 +422,12 @@ void editLogic(bool flag, Student& editStud) {
 				Return = false;
 				break;
 			case 8:
-				cout << "Введите новый номер института: " << endl; cin >> editStud.study_place.Institute;
-				Return = false;
+				while (true) {
+					cout << "Введите название института: "; cin >> editStud.study_place.Institute;
+					if (!check(editStud.study_place.Institute)) { Return = false; break; }
+					cout << "bad" << endl;
+					Clear();
+				}
 				break;
 			case 9:
 				return;
@@ -444,11 +483,15 @@ void editStudent() {
 
 		fout.close();
 
-		unsigned short int option;
-		cout << "Изменить чьи-то еще данные?? (1 - да, 2 - нет): "; cin >> option;
-		switch (option) {
-		case 1: break;
-		case 2: chek = false; break;
+		bool Return = true;
+		while (Return == true) {
+			unsigned short int option;
+			cout << "Изменить чьи-то еще данные? (1 - да, 2 - нет): "; cin >> option;
+			switch (option) {
+			case 1: Return = false; break;
+			case 2: chek = false; Return = false; break;
+			default: cout << "Действие не определено. Повторите выбор действия." << endl; Clear();
+			}
 		}
 	}
 }
@@ -476,12 +519,16 @@ void getStudent() {
 		}
 		if (flag == false) { cout << "Студента с таким номером студенческого билета нет." << endl; }
 
-		unsigned short int option;
-		cout << "Совершить поиск еще раз? (1 - да, 2 - нет): "; cin >> option;
-		in.close();
-		switch (option) {
-		case 1: flag = true;  break;
-		case 2: chek = false; break;
+		bool Return = true;
+		while (Return == true) {
+			unsigned short int option;
+			cout << "Совершить поиск еще раз? (1 - да, 2 - нет): "; cin >> option;
+			in.close();
+			switch (option) {
+			case 1: flag = true; Return = false; break;
+			case 2: chek = false; Return = false; break;
+			default: cout << "Действие не определено. Повторите выбор действия." << endl; Clear();
+			}
 		}
 	}
 }
@@ -505,11 +552,15 @@ void getAllStudents() {
 	cout << endl;
 	in.close();
 
-	int option;
-	cout << "more info?: "; cin >> option;
-	switch (option) {
-	case 1: getStudent(); break;
-	case 2: break;
+	bool Return = true;
+	while (Return == true) {
+		int option;
+		cout << "Вывести подробные данные о конкретном студенте? (1 - да, 2 - нет): "; cin >> option;
+		switch (option) {
+		case 1: getStudent(); Return = false; break;
+		case 2: Return = false; break;
+		default: cout << "Действие не определено. Повторите выбор действия." << endl; Clear();
+		}
 	}
 }
 
