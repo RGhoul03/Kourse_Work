@@ -247,6 +247,43 @@ int line_count() {
 	return x;
 }
 
+void delLogic(bool flag, string UID) {
+	int LineCount = line_count();
+
+	if (flag) {
+		ifstream in("DB_Students.txt");
+		for (int i = 0; i < LineCount; i++) {
+			Student student_see;
+			in >> student_see.uniqueID >> student_see.studentInfo.SurName >>
+				student_see.studentInfo.Name >> student_see.studentInfo.MiddleName >>
+				student_see.Birthday.day >> student_see.Birthday.month >> student_see.Birthday.year >>
+				student_see.Gender >> student_see.EntranceYear.day >> student_see.EntranceYear.month >> student_see.EntranceYear.year >>
+				student_see.study_place.Group >> student_see.study_place.Institute;
+
+			ofstream fout;
+			fout.open("DB_Students_temp.txt", ofstream::app);
+
+			if (student_see.uniqueID != UID) {
+				fout << student_see.uniqueID << " " << student_see.studentInfo.SurName << " " <<
+					student_see.studentInfo.Name << " " << student_see.studentInfo.MiddleName << " " <<
+					student_see.Birthday.day << " " << student_see.Birthday.month << " " << student_see.Birthday.year << " " <<
+					student_see.Gender << " " << student_see.EntranceYear.day << " " << student_see.EntranceYear.month << " " << student_see.EntranceYear.year << " " <<
+					student_see.study_place.Group << " " << student_see.study_place.Institute << endl;
+			}
+			fout.close();
+
+		}
+		in.close();
+		string file_name = "DB_Students.txt";
+		remove(file_name.c_str());
+
+		char oldfilename[] = "DB_Students_temp.txt";
+		char newfilename[] = "DB_Students.txt";
+		rename(oldfilename, newfilename);
+	}
+
+}
+
 void deleteStudent() {
 	int LineCount = line_count();
 
@@ -272,40 +309,117 @@ void deleteStudent() {
 
 		in.close();
 
-		if (flag) {
-			ifstream in("DB_Students.txt");
-			for (int i = 0; i < LineCount; i++) {
-				Student student_see;
-				in >> student_see.uniqueID >> student_see.studentInfo.SurName >>
-					student_see.studentInfo.Name >> student_see.studentInfo.MiddleName >>
-					student_see.Birthday.day >> student_see.Birthday.month >> student_see.Birthday.year >>
-					student_see.Gender >> student_see.EntranceYear.day >> student_see.EntranceYear.month >> student_see.EntranceYear.year >>
-					student_see.study_place.Group >> student_see.study_place.Institute;
-
-				ofstream fout;
-				fout.open("DB_Students_temp.txt", ofstream::app);
-
-				if (student_see.uniqueID != unique_id) {
-					fout << student_see.uniqueID << " " << student_see.studentInfo.SurName << " " <<
-						student_see.studentInfo.Name << " " << student_see.studentInfo.MiddleName << " " <<
-						student_see.Birthday.day << " " << student_see.Birthday.month << " " << student_see.Birthday.year << " " <<
-						student_see.Gender << " " << student_see.EntranceYear.day << " " << student_see.EntranceYear.month << " " << student_see.EntranceYear.year << " " <<
-						student_see.study_place.Group << " " << student_see.study_place.Institute << endl;
-				}
-				fout.close();
-
-			}
-			in.close();
-			string file_name = "DB_Students.txt";
-			remove(file_name.c_str());
-
-			char oldfilename[] = "DB_Students_temp.txt";
-			char newfilename[] = "DB_Students.txt";
-			rename(oldfilename, newfilename);
-		}
+		delLogic(flag, unique_id);
 		
 		unsigned short int option;
 		cout << "Удалить кого-то еще? (1 - да, 2 - нет): "; cin >> option;
+		switch (option) {
+		case 1: break;
+		case 2: chek = false; break;
+		}
+	}
+}
+
+void editLogic(bool flag, Student& editStud) {
+	while (true) {
+		cout << "Какие данные вы хотите изменить?" << endl;
+		cout << "1 - Имя" << endl;
+		cout << "2 - Фамилию" << endl;
+		cout << "3 - Отчество" << endl;
+		cout << "4 - Дату рождения" << endl;
+		cout << "5 - Номер студенческого билета" << endl;
+		cout << "6 - Год поступления" << endl;
+		cout << "7 - Группу" << endl;
+		cout << "8 - Институт" << endl;
+		cout << "9 - Вернуться назад" << endl << endl;
+
+		bool Return = true;
+		while (Return == true) {
+			unsigned short int option; int Day, Month, Year;
+			cout << "Введите номер выбранного действия: "; cin >> option;
+
+			switch (option)
+			{
+			case 1:
+				cout << "Введите новое имя: " << endl; cin >> editStud.studentInfo.Name;
+				Return = false;
+				break;
+			case 2:
+				cout << "Введите новую фамилию" << endl; cin >> editStud.studentInfo.SurName;
+				Return = false;
+				break;
+			case 3:
+				cout << "Введите новое отчество" << endl; cin >> editStud.studentInfo.MiddleName;
+				Return = false;
+				break;
+			case 4:
+				cout << "день"; cin >> Day; cout << endl << "месяц"; cin >> Month; cout << endl << "год"; cin >> Year;
+				editStud.Birthday.setDate(Day, Month, Year);
+				Return = false;
+				break;
+			case 5:
+				cout << "В разработке" << endl;
+				Return = false;
+				break;
+			case 6:
+				cout << "день"; cin >> Day; cout << endl << "месяц"; cin >> Month; cout << endl << "год"; cin >> Year;
+				editStud.EntranceYear.setDate(Day, Month, Year);
+				cout << "В разработке" << endl;
+				Return = false;
+				break;
+			case 7:
+				cout << "В разработке" << endl;
+				Return = false;
+				break;
+			case 8:
+				cout << "В разработке" << endl;
+				Return = false;
+				break;
+			case 9:
+				return;
+			default:
+				cout << "Действие не определено. Повторите выбор действия." << endl;
+				Clear();
+			}
+		}
+	}
+}
+
+void editStudent() {
+	int LineCount = line_count();
+
+	bool chek = true;
+	while (chek == true) {
+		string unique_id;
+		cout << "Введите номер студенческого билета: "; cin >> unique_id;
+		Student student_see;
+
+		ifstream in("DB_Students.txt");
+		bool flag = false;
+		for (int i = 0; i < LineCount; i++) {
+			in >> student_see.uniqueID >> student_see.studentInfo.SurName >>
+				student_see.studentInfo.Name >> student_see.studentInfo.MiddleName >>
+				student_see.Birthday.day >> student_see.Birthday.month >> student_see.Birthday.year >>
+				student_see.Gender >> student_see.EntranceYear.day >> student_see.EntranceYear.month >> student_see.EntranceYear.year >>
+				student_see.study_place.Group >> student_see.study_place.Institute;
+			if (student_see.uniqueID == unique_id) {
+				flag = true; cout << "Данные этого студента вы хотите изменить: "; student_see.printShortInfo(); break;
+			}
+		}
+		if (flag == false) { cout << "Студента с таким номером студенческого билета нет." << endl; }
+
+		in.close();
+
+		delLogic(flag, unique_id);
+
+		Student* ed_stud = new Student(student_see);
+		editLogic(flag, *ed_stud);
+
+		cout << "Измененные данные" << endl;
+		ed_stud->printStudent();
+
+		unsigned short int option;
+		cout << "Изменить чьи-то еще данные?? (1 - да, 2 - нет): "; cin >> option;
 		switch (option) {
 		case 1: break;
 		case 2: chek = false; break;
@@ -404,7 +518,7 @@ void MainMenu() {
 				Return = false;
 				break;
 			case 4:
-				cout << "Функция изменения данных о студенте в разработке. Приносим свои извинения" << endl;
+				editStudent();
 				Return = false;
 				break;
 			case 5:
