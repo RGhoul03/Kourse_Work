@@ -5,6 +5,7 @@
 #include <fstream>
 #include <cstdlib>
 #include <cstdio>
+#include "Session_Class.h"
 
 using namespace std;
 
@@ -103,6 +104,7 @@ public:
 	Date EntranceYear;
 	StudyPlace study_place;
 	unsigned short int Gender;
+	Session* term;
 
 	Student() {
 		studentInfo.SurName = "Иванов"; studentInfo.Name = "Иван"; studentInfo.MiddleName = "Иванович";
@@ -178,26 +180,39 @@ public:
 			cout << "Вы ввели что-то не так." << endl;
 			Clear();
 		}
+
+		int count_sessions;
+		cout << "Введите кол-во сессий: "; cin >> count_sessions;
+		if (count_sessions > 0 && count_sessions < 11) {
+			term = new Session[count_sessions];
+			for (int i = 0; i < count_sessions; i++) {
+				term[i];
+			}
+			//delete[] term;
+		}
+		else { cout << "Слишком много сессий" << endl; }
+
 	}
 
 	void printStudent() {
-		cout << studentInfo.SurName << " " << studentInfo.Name << " " << studentInfo.MiddleName << endl;
-		Birthday.printDate();
-		if (Gender == 0) { cout << "Женщина" << endl; }
-		else{ cout << "Мужчина" << endl; }
-		cout << uniqueID << endl;
-		EntranceYear.printDate();
-		cout << study_place.Group << endl;
-		cout << study_place.Institute << endl;
-	}
+			cout << studentInfo.SurName << " " << studentInfo.Name << " " << studentInfo.MiddleName << endl;
+			Birthday.printDate();
+			if (Gender == 0) { cout << "Женщина" << endl; }
+			else { cout << "Мужчина" << endl; }
+			cout << uniqueID << endl;
+			EntranceYear.printDate();
+			cout << study_place.Group << endl;
+			cout << study_place.Institute << endl;
+			term->print_session();
+		}
 
 	void printShortInfo() {
-		cout << uniqueID << " " << studentInfo.SurName << " " << studentInfo.Name << " " << studentInfo.MiddleName << endl;;
-	}
+			cout << uniqueID << " " << studentInfo.SurName << " " << studentInfo.Name << " " << studentInfo.MiddleName << endl;;
+		}
 
 	void Clear() {
-		cin.clear(); cin.ignore(INT_MAX, '\n');
-	}
+			cin.clear(); cin.ignore(INT_MAX, '\n');
+		}
 };
 
 bool check(string& line)
@@ -214,6 +229,10 @@ bool check(string& line)
 	}
 
 	return false;
+}
+
+void Clear() {
+	cin.clear(); cin.ignore(INT_MAX, '\n');
 }
 
 void addStudent() {
@@ -235,20 +254,18 @@ void addStudent() {
 
 		fout.close();
 
-		bool Return = true;
-		while (Return == true) {
-			unsigned short int option;
-			cout << "Добавить еще одного студента? (1 - да, 2 - нет): "; cin >> option;
-			switch (option) {
-			case 1: break;
-			case 2: chek = false; break;
-			}
+		fout.open("DB_Sessions.txt", ofstream::app);
+		fout << student_add.uniqueID << " " << student_add.term->session->subject << " " << student_add.term->session->mark << endl;
+
+		fout.close();
+
+		unsigned short int option;
+		cout << "Добавить еще одного студента? (1 - да, 2 - нет): "; cin >> option;
+		switch (option) {
+		case 1: Clear(); break;
+		case 2: chek = false; Clear(); break;
 		}
 	}
-}
-
-void Clear() {
-	cin.clear(); cin.ignore(INT_MAX, '\n');
 }
 
 bool FileIsExist(std::string filePath) {
@@ -308,11 +325,11 @@ void delLogic(bool flag, string UID) {
 		}
 		in.close();
 		string file_name = "DB_Students.txt";
-		remove(file_name.c_str());
+		std::remove(file_name.c_str());
 
 		char oldfilename[] = "DB_Students_temp.txt";
 		char newfilename[] = "DB_Students.txt";
-		rename(oldfilename, newfilename);
+		std::rename(oldfilename, newfilename);
 	}
 
 }

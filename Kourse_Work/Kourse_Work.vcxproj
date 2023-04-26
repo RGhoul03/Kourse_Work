@@ -130,6 +130,7 @@
     <ClCompile Include="Kourse_Work.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Session_Class.h" />
     <ClInclude Include="Student.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
