@@ -105,6 +105,7 @@ public:
 	StudyPlace study_place;
 	unsigned short int Gender;
 	Session* term;
+	int count_sessions;
 
 	Student() {
 		studentInfo.SurName = "Иванов"; studentInfo.Name = "Иван"; studentInfo.MiddleName = "Иванович";
@@ -181,7 +182,6 @@ public:
 			Clear();
 		}
 
-		int count_sessions;
 		cout << "Введите кол-во сессий: "; cin >> count_sessions;
 		if (count_sessions > 0 && count_sessions < 11) {
 			term = new Session[count_sessions];
@@ -190,7 +190,7 @@ public:
 			}
 			//delete[] term;
 		}
-		else { cout << "Слишком много сессий" << endl; }
+		else if (count_sessions != 0 ){ cout << "Слишком много сессий" << endl; }
 
 	}
 
@@ -255,7 +255,14 @@ void addStudent() {
 		fout.close();
 
 		fout.open("DB_Sessions.txt", ofstream::app);
-		fout << student_add.uniqueID << " " << student_add.term->session->subject << " " << student_add.term->session->mark << endl;
+
+		fout << student_add.uniqueID << ":\n";
+		for (int i = 0; i < student_add.count_sessions; i++) {
+			fout << "\t" << i << ":\n";
+			for (int j = 0; j < student_add.term[i].session[j].count_exams-1; j++) {
+				fout << "\t\t" << j << ": " << student_add.term[i].session[j].subject << " " << student_add.term[i].session[j].mark << endl;
+			}
+		}
 
 		fout.close();
 
@@ -361,15 +368,12 @@ void deleteStudent() {
 
 		delLogic(flag, unique_id);
 		
-		bool Return = true;
-		while (Return == true) {
-			unsigned short int option;
-			cout << "Удалить кого-то еще? (1 - да, 2 - нет): "; cin >> option;
-			switch (option) {
-			case 1: break;
-			case 2: chek = false; break;
-			default: cout << "Действие не определено. Повторите выбор действия." << endl; Clear();
-			}
+		unsigned short int option;
+		cout << "Удалить кого-то еще? (1 - да, 2 - нет): "; cin >> option;
+		switch (option) {
+		case 1: Clear(); break;
+		case 2: chek = false; Clear(); break;
+		default: cout << "Действие не определено. Повторите выбор действия." << endl; Clear();
 		}
 	}
 }
