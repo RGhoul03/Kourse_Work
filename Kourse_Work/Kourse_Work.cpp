@@ -153,7 +153,8 @@ public:
 			Clear();
 		}
 		int Day, Month, Year;
-		cout << "день"; cin >> Day; cout << endl << "месяц"; cin >> Month; cout << endl << "год"; cin >> Year;
+		cout << "Введите дату рождения:\n";
+		cout << "День: "; cin >> Day; cout << "\n" << "Месяц: "; cin >> Month; cout << "\n" << "Год: "; cin >> Year; cout << endl;
 		Birthday.setDate(Day, Month, Year);
 
 		while (true) {
@@ -169,8 +170,8 @@ public:
 
 		cout << "студак: "; cin >> uniqueID;
 
-		cout << "Год поступления" << endl;
-		cout << "день"; cin >> Day; cout << endl << "месяц"; cin >> Month; cout << endl << "год"; cin >> Year;
+		cout << "Введите дату поступления:\n";
+		cout << "День: "; cin >> Day; cout << "\n" << "Месяц: "; cin >> Month; cout << "\n" << "Год: "; cin >> Year; cout << endl;
 		EntranceYear.setDate(Day, Month, Year);
 
 		cout << "Ввод группы: "; cin >> study_place.Group;
@@ -182,16 +183,17 @@ public:
 			Clear();
 		}
 
+	}
+
+	void SessionSet() {
 		cout << "Введите кол-во сессий: "; cin >> count_sessions;
 		if (count_sessions > 0 && count_sessions < 11) {
 			term = new Session[count_sessions];
 			for (int i = 0; i < count_sessions; i++) {
 				term[i];
 			}
-			//delete[] term;
 		}
-		else if (count_sessions != 0 ){ cout << "Слишком много сессий" << endl; }
-
+		else if (count_sessions != 0) { cout << "Слишком много сессий" << endl; }
 	}
 
 	void printStudent() {
@@ -203,8 +205,13 @@ public:
 			EntranceYear.printDate();
 			cout << study_place.Group << endl;
 			cout << study_place.Institute << endl;
-			term->print_session();
 		}
+
+	void printSession() {
+		for (int i = 0; i < count_sessions; i++) {
+			term[i].print_session();
+		}
+	}
 
 	void printShortInfo() {
 			cout << uniqueID << " " << studentInfo.SurName << " " << studentInfo.Name << " " << studentInfo.MiddleName << endl;;
@@ -254,15 +261,17 @@ void addStudent() {
 
 		fout.close();
 
+		student_add.SessionSet();
+
 		fout.open("DB_Sessions.txt", ofstream::app);
 
-		fout << student_add.uniqueID << ":\n";
+		fout << student_add.uniqueID << " " << student_add.count_sessions;
 		for (int i = 0; i < student_add.count_sessions; i++) {
-			fout << "\t" << i << ":\n";
 			for (int j = 0; j < student_add.term[i].session[j].count_exams-1; j++) {
-				fout << "\t\t" << j << ": " << student_add.term[i].session[j].subject << " " << student_add.term[i].session[j].mark << endl;
+				fout << j << " " << student_add.term[i].session[j].subject << " " << student_add.term[i].session[j].mark;
 			}
 		}
+		fout << endl;
 
 		fout.close();
 
@@ -286,7 +295,7 @@ bool FileIsExist(std::string filePath) {
 	return isExist;
 }
 
-int line_count() {
+int line_count_Student() {
 	if (FileIsExist("DB_Students.txt")) {
 		int x = 0;
 		ifstream f("DB_Students.txt");
@@ -304,8 +313,26 @@ int line_count() {
 	else { return 0; }
 }
 
+int line_count_Session() {
+	if (FileIsExist("DB_Sessions.txt")) {
+		int x = 0;
+		ifstream f("DB_Sessions.txt");
+		while (true)
+		{
+			string v;
+			getline(f, v);
+			if (!f.eof())
+				x++;
+			else
+				break;
+		}
+		return x + 1;
+	}
+	else { return 0; }
+}
+
 void delLogic(bool flag, string UID) {
-	int LineCount = line_count();
+	int LineCount = line_count_Student();
 
 	if (flag) {
 		ifstream in("DB_Students.txt");
@@ -342,7 +369,7 @@ void delLogic(bool flag, string UID) {
 }
 
 void deleteStudent() {
-	int LineCount = line_count();
+	int LineCount = line_count_Student();
 
 	bool chek = true;
 	while (chek == true) {
@@ -461,7 +488,7 @@ void editLogic(bool flag, Student& editStud) {
 }
 
 void editStudent() {
-	int LineCount = line_count();
+	int LineCount = line_count_Student();
 
 	bool chek = true;
 	while (chek == true) {
@@ -518,7 +545,8 @@ void editStudent() {
 }
 
 void getStudent() {
-	int LineCount = line_count();
+	int LineCount = line_count_Student();
+	int LineCount_session = line_count_Session();
 
 	bool chek = true;
 	while (chek == true) {
@@ -538,13 +566,45 @@ void getStudent() {
 			}
 
 		}
+		in.close();
+
 		if (flag == false) { cout << "Студента с таким номером студенческого билета нет." << endl; }
+
+		else {
+			ifstream in("DB_Sessions.txt");
+			flag = false;
+			int lineC = 0;
+			for (int i = 0; i < LineCount_session + 1; i++) {
+				Student student_see;
+				string symbol; int max_ex;
+				in >> student_see.uniqueID >> student_see.count_sessions >> max_ex;;
+				student_see.term = new Session[student_see.count_sessions];
+				for (int j = 0; j < student_see.count_sessions; j++) {
+					student_see.term[j].session = new Exam[max_ex];
+					for (int k = 0; k < max_ex; k++) {
+						in >> symbol;
+						student_see.term[j].session[k].count_exams++;
+						if (symbol != "|") {
+							student_see.term[j].session[k].subject = symbol;
+							in >> student_see.term[j].session[k].mark;
+							cout << student_see.term[j].session[k].subject << student_see.term[j].session[k].mark << endl;
+						}
+					}
+				}
+
+				if (student_see.uniqueID == unique_id) {
+					cout << "ахтунг 9\n";
+					student_see.printSession(); flag = true; break;
+				}
+
+			}
+			in.close();
+		}
 
 		bool Return = true;
 		while (Return == true) {
 			unsigned short int option;
 			cout << "Совершить поиск еще раз? (1 - да, 2 - нет): "; cin >> option;
-			in.close();
 			switch (option) {
 			case 1: flag = true; Return = false; break;
 			case 2: chek = false; Return = false; break;
@@ -557,7 +617,7 @@ void getStudent() {
 void getAllStudents() {
 	cout << "--- Вывод данных о студенте ---" << endl;
 
-	int LineCount = line_count();
+	int LineCount = line_count_Student();
 	Student student_see;
 	ifstream in("DB_Students.txt");
 
@@ -596,7 +656,7 @@ void MainMenu() {
 		cout << "5 - Удалить     данные    студента" << endl;
 		cout << "6 - Выйти       из       программы" << endl << endl;
 
-		if (line_count() == 0) {
+		if (line_count_Student() == 0) {
 			cout << "База данных пуста! Вывод, изменение и удаление данных не доступны!" << endl;
 			cout << "Вы можете добавить новые данные." << endl;
 		}

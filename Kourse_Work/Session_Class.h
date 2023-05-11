@@ -4,15 +4,15 @@
 using namespace std;
 
 struct Exam {
-	string subject;
-	int count_exams;
-	int mark;
+	string subject = "#";
+	int count_exams = 0;
+	int mark = 0;
 };
 
 class Session {
 public:
 	Exam* session;
-	Session() {
+	void SessionSet() {
 		int count_exam;
 		cout << "Введите кол-во экзаменов: "; cin >> count_exam;
 		if (count_exam > 0 && count_exam < 11) {
@@ -22,7 +22,6 @@ public:
 				cout << "Введите название экзамена: "; cin >> session[i].subject;
 				cout << "Введите оценку за экзамен: "; cin >> session[i].mark;
 			}
-			//delete[] session;
 			session[count_exam].subject = 'e';
 			session[count_exam].mark = 0;
 		}
@@ -30,7 +29,11 @@ public:
 	}
 
 	void print_session() {
-		cout << "Экзамен: " << session->subject << endl;
-		cout << "Оценка: " << session->mark << endl;
+		for (int i = 0; i < session[i].count_exams; i++) {
+			if (i < session[i].count_exams) {
+				cout << "Экзамен: " << session[i].subject << "\n";
+				cout << "Оценка: " << session[i].mark << endl;
+			}
+		}
 	}
 };
