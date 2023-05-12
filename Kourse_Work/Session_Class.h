@@ -28,9 +28,9 @@ public:
 		else { cout << "Слишком много экзаменов" << endl; }
 	}
 
-	void print_session() {
-		for (int i = 0; i < session[i].count_exams; i++) {
-			if (i < session[i].count_exams) {
+	void print_session(int max_ex) {
+		for (int i = 0; i < max_ex; i++) {
+			if (session[i].subject != "#" and session[i].mark != 0) {
 				cout << "Экзамен: " << session[i].subject << "\n";
 				cout << "Оценка: " << session[i].mark << endl;
 			}

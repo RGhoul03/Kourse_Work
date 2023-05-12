@@ -190,7 +190,7 @@ public:
 		if (count_sessions > 0 && count_sessions < 11) {
 			term = new Session[count_sessions];
 			for (int i = 0; i < count_sessions; i++) {
-				term[i];
+				term[i].SessionSet();
 			}
 		}
 		else if (count_sessions != 0) { cout << "Слишком много сессий" << endl; }
@@ -207,9 +207,10 @@ public:
 			cout << study_place.Institute << endl;
 		}
 
-	void printSession() {
+	void printSession(int max_ex) {
 		for (int i = 0; i < count_sessions; i++) {
-			term[i].print_session();
+			cout << "Сессия номер " << i + 1 << "\n";
+			term[i].print_session(max_ex);
 		}
 	}
 
@@ -265,11 +266,21 @@ void addStudent() {
 
 		fout.open("DB_Sessions.txt", ofstream::app);
 
-		fout << student_add.uniqueID << " " << student_add.count_sessions;
+		int max_exam = 0;
+		for (int i = 0; i < student_add.count_sessions; i++) {
+			for (int j = 0; j < student_add.term[i].session[j].count_exams - 1; j++) {
+				if (max_exam < student_add.term[i].session[j].count_exams - 1) {
+					max_exam = student_add.term[i].session[j].count_exams - 1;
+				}
+			}
+		}
+
+		fout << student_add.uniqueID << " " << student_add.count_sessions << " " << max_exam << " ";
 		for (int i = 0; i < student_add.count_sessions; i++) {
 			for (int j = 0; j < student_add.term[i].session[j].count_exams-1; j++) {
-				fout << j << " " << student_add.term[i].session[j].subject << " " << student_add.term[i].session[j].mark;
+				fout << student_add.term[i].session[j].subject << " " << student_add.term[i].session[j].mark << " ";
 			}
+			fout << "|" << " ";
 		}
 		fout << endl;
 
@@ -577,24 +588,25 @@ void getStudent() {
 			for (int i = 0; i < LineCount_session + 1; i++) {
 				Student student_see;
 				string symbol; int max_ex;
-				in >> student_see.uniqueID >> student_see.count_sessions >> max_ex;;
+				in >> student_see.uniqueID >> student_see.count_sessions >> max_ex;
 				student_see.term = new Session[student_see.count_sessions];
 				for (int j = 0; j < student_see.count_sessions; j++) {
 					student_see.term[j].session = new Exam[max_ex];
-					for (int k = 0; k < max_ex; k++) {
+				}
+
+				for (int j = 0; j < student_see.count_sessions; j++) {
+					for (int k = 0; k < max_ex+1; k++) {
 						in >> symbol;
-						student_see.term[j].session[k].count_exams++;
-						if (symbol != "|") {
-							student_see.term[j].session[k].subject = symbol;
-							in >> student_see.term[j].session[k].mark;
-							cout << student_see.term[j].session[k].subject << student_see.term[j].session[k].mark << endl;
+						if (symbol == "|") {
+							break;
 						}
+						student_see.term[j].session[k].subject = symbol;
+						in >> student_see.term[j].session[k].mark;
 					}
 				}
 
 				if (student_see.uniqueID == unique_id) {
-					cout << "ахтунг 9\n";
-					student_see.printSession(); flag = true; break;
+					student_see.printSession(max_ex); flag = true; break;
 				}
 
 			}
