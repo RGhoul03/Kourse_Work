@@ -576,7 +576,6 @@ void getStudent() {
 		else {
 			ifstream in("DB_Sessions.txt");
 			flag = false;
-			int lineC = 0;
 			for (int i = 0; i < LineCount_session + 1; i++) {
 				Student student_see;
 				string symbol; int max_ex;
@@ -652,9 +651,9 @@ void getAllStudents() {
 void task(){
 	List IDlist;
 
-	int LineCount = line_count_Student();
-	int LineCount_session = line_count_Session();
-	string ID, gender; int sex;
+	int LineCount = line_count_Student(), LineCount_session = line_count_Session(),
+		Line_c_good = 0, Line_c_bad = 0;
+	string ID, gender, max_good, min_good, max_bad, min_bad; int sex;
 	cout << "Введите номер группы: "; cin >> ID;
 	cout << "Введите пол: "; cin >> gender;
 
@@ -676,10 +675,9 @@ void task(){
 	}
 	in.close();
 
-	IDlist.printList();
-
 	ifstream get("DB_Sessions.txt");
-	int lineC = 0;
+	float ex_count = 0, good_mark_count = 0; 
+	int proportion = 0;
 	for (int i = 0; i < LineCount_session + 1; i++) {
 		Student student_see;
 		string symbol; int max_ex;
@@ -695,18 +693,111 @@ void task(){
 				if (symbol == "|") {
 					break;
 				}
+				ex_count += 1;
 				student_see.term[j].session[k].subject = symbol;
 				get >> student_see.term[j].session[k].mark;
+				if (student_see.term[j].session[k].mark == 5 or student_see.term[j].session[k].mark == 4) {
+					good_mark_count += 1;
+				}
 			}
 		}
 
+		proportion = int((good_mark_count / ex_count) * 100);
+
 		if (IDlist.find_item(student_see.uniqueID)) {
-			cout << endl << student_see.uniqueID << ": ";
-			student_see.printSession(max_ex); cout << endl << endl;
+			if (proportion > 50) {
+				Line_c_good += 1;
+				ofstream fout;
+				fout.open("GoodMark_temp.txt", ofstream::app);
+				fout << student_see.uniqueID << " " << proportion << endl;
+				fout.close();
+			}
+			else {
+				Line_c_bad += 1;
+				ofstream fout;
+				fout.open("BadMark_temp.txt", ofstream::app);
+				fout << student_see.uniqueID << " " << proportion << endl;
+				fout.close();
+			}
 		}
+
+		good_mark_count = 0;
+		ex_count = 0;
+		proportion = 0;
 
 	}
 	get.close();
+
+	int max = 0, min = 100;
+	ifstream ing("GoodMark_temp.txt");
+	for (int i = 0; i < Line_c_good; i++) {
+		Student student_see;
+		ing >> ID >> proportion;
+		if (proportion>max) {
+			max = proportion;
+			max_good = ID;
+		}
+		else if (proportion <= min) {
+			min = proportion;
+			min_good = ID;
+		}
+	}
+	ing.close();
+
+	string file_name = "GoodMark_temp.txt";
+	std::remove(file_name.c_str());
+
+	min = 100; max = 0;
+
+	ifstream inb("BadMark_temp.txt");
+	for (int i = 0; i < Line_c_good; i++) {
+		Student student_see;
+		inb >> ID >> proportion;
+		if (proportion > max) {
+			max = proportion;
+			max_bad = ID;
+		}
+		else if (proportion <= min) {
+			min = proportion;
+			min_bad = ID;
+		}
+	}
+	inb.close();
+
+	file_name = "BadMark_temp.txt";
+	std::remove(file_name.c_str());
+
+	ifstream inf("DB_Students.txt");
+	for (int i = 0; i < LineCount; i++) {
+		Student student_see;
+		inf >> student_see.uniqueID >> student_see.studentInfo.SurName >>
+			student_see.studentInfo.Name >> student_see.studentInfo.MiddleName >>
+			student_see.Birthday.day >> student_see.Birthday.month >> student_see.Birthday.year >>
+			student_see.Gender >> student_see.EntranceYear.day >> student_see.EntranceYear.month >> student_see.EntranceYear.year >>
+			student_see.study_place.Group >> student_see.study_place.Institute;
+
+		if (student_see.uniqueID == max_good) {
+			max_good = max_good + " " + student_see.studentInfo.SurName + " " + student_see.studentInfo.Name + " " + student_see.studentInfo.MiddleName;
+		}
+		else if (student_see.uniqueID == min_good) {
+			min_good = min_good + " " + student_see.studentInfo.SurName + " " + student_see.studentInfo.Name + " " + student_see.studentInfo.MiddleName;
+		}
+		else if (student_see.uniqueID == max_bad) {
+			max_bad = max_bad + " " + student_see.studentInfo.SurName + " " + student_see.studentInfo.Name + " " + student_see.studentInfo.MiddleName;
+		}
+		else if (student_see.uniqueID == min_bad) {
+			min_bad = min_bad + " " + student_see.studentInfo.SurName + " " + student_see.studentInfo.Name + " " + student_see.studentInfo.MiddleName;
+		}
+	}
+	inf.close();
+
+	cout << "Группа отличников:" << endl;
+	cout << "Лучший из лучших: " << max_good << endl;
+	cout << "Худший из лучших: " << min_good << endl;
+	cout << "Группа двоечников:" << endl;
+	cout << "Лучший из худших: " << max_bad << endl;
+	cout << "Худший из худших: " << min_bad << endl;
+
 }
 
 void MainMenu() {
