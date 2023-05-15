@@ -130,8 +130,12 @@
     <ClCompile Include="Kourse_Work.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Crypto.h" />
     <ClInclude Include="Session_Class.h" />
-    <ClInclude Include="Student.h" />
+    <ClInclude Include="Task.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ClassDiagram.cd" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

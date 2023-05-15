@@ -22,8 +22,6 @@ public:
 				cout << "Введите название экзамена: "; cin >> session[i].subject;
 				cout << "Введите оценку за экзамен: "; cin >> session[i].mark;
 			}
-			session[count_exam].subject = 'e';
-			session[count_exam].mark = 0;
 		}
 		else { cout << "Слишком много экзаменов" << endl; }
 	}

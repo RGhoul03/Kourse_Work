@@ -1,0 +1,60 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="Session">
+    <Position X="9" Y="1" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAEAAAEAAAAAAAAAAAAAAAIAAAA=</HashCode>
+      <FileName>Session_Class.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Date">
+    <Position X="5.5" Y="1" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>EAAkAAAAAAEAAAAAACAAAAAAAAQACAABAAAAAAAAAAA=</HashCode>
+      <FileName>Kourse_Work.cpp</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Student">
+    <Position X="2" Y="1" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAQAAIQAAIACCAAEAAAAAAAABYAAgEAAAAAAJAAAQ=</HashCode>
+      <FileName>Kourse_Work.cpp</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="List">
+    <Position X="10.75" Y="1" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAgAAAAAAAAAAAAAAAAAAEAAAAAAgAAAAAAAI=</HashCode>
+      <FileName>Task.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Struct Name="Exam">
+    <Position X="7.25" Y="1" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAACAgAAAAAAAAAAAAAAAgAA=</HashCode>
+      <FileName>Session_Class.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="student">
+    <Position X="3.75" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAUAAQAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Kourse_Work.cpp</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="StudyPlace">
+    <Position X="3.75" Y="1" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAEAAAAAAAAAAAAAAACAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Kourse_Work.cpp</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="Node">
+    <Position X="10.75" Y="3" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAIAAAA=</HashCode>
+      <FileName>Task.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

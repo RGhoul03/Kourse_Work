@@ -5,7 +5,10 @@
 #include <fstream>
 #include <cstdlib>
 #include <cstdio>
+#include <time.h>
 #include "Session_Class.h"
+#include "Crypto.h"
+#include "Task.h"
 
 using namespace std;
 
@@ -64,17 +67,6 @@ public:
 		}
 		cout << "\nДата не корректна. Исправьте номер месяца, номер месяца не должен быть больше 12. Введенный номер месяца: " << m << endl;
 		return false;
-	}
-
-	void addDay(unsigned short delta) {
-		if (chekDate(day + delta, month, year)) {
-			this->day = day;
-			this->month = month;
-			this->year = year;
-			cout << endl << "Новая дата: ";
-			printDate();
-			//cout << "\n Новая дата: " << day + delta << "." << month << "." << year << endl;
-		}
 	}
 
 	void printDate() {
@@ -187,7 +179,7 @@ public:
 
 	void SessionSet() {
 		cout << "Введите кол-во сессий: "; cin >> count_sessions;
-		if (count_sessions > 0 && count_sessions < 11) {
+		if (count_sessions > 0 && count_sessions < 10) {
 			term = new Session[count_sessions];
 			for (int i = 0; i < count_sessions; i++) {
 				term[i].SessionSet();
@@ -633,7 +625,7 @@ void getAllStudents() {
 	Student student_see;
 	ifstream in("DB_Students.txt");
 
-	for (int i = 0; i < LineCount; i++) {
+	for (int i = 0; i < LineCount - 1; i++) {
 		in >> student_see.uniqueID >> student_see.studentInfo.SurName >>
 			student_see.studentInfo.Name >> student_see.studentInfo.MiddleName >>
 			student_see.Birthday.day >> student_see.Birthday.month >> student_see.Birthday.year >>
@@ -657,6 +649,66 @@ void getAllStudents() {
 	}
 }
 
+void task(){
+	List IDlist;
+
+	int LineCount = line_count_Student();
+	int LineCount_session = line_count_Session();
+	string ID, gender; int sex;
+	cout << "Введите номер группы: "; cin >> ID;
+	cout << "Введите пол: "; cin >> gender;
+
+	if (gender == "м") { sex = 1; }
+	else if(gender == "ж"){ sex = 0; }
+
+	ifstream in("DB_Students.txt");
+	for (int i = 0; i < LineCount; i++) {
+		Student student_see;
+		in >> student_see.uniqueID >> student_see.studentInfo.SurName >>
+			student_see.studentInfo.Name >> student_see.studentInfo.MiddleName >>
+			student_see.Birthday.day >> student_see.Birthday.month >> student_see.Birthday.year >>
+			student_see.Gender >> student_see.EntranceYear.day >> student_see.EntranceYear.month >> student_see.EntranceYear.year >>
+			student_see.study_place.Group >> student_see.study_place.Institute;
+
+		if (student_see.study_place.Group == ID and student_see.Gender == sex) {
+			IDlist.addNode(student_see.uniqueID);
+		}
+	}
+	in.close();
+
+	IDlist.printList();
+
+	ifstream get("DB_Sessions.txt");
+	int lineC = 0;
+	for (int i = 0; i < LineCount_session + 1; i++) {
+		Student student_see;
+		string symbol; int max_ex;
+		get >> student_see.uniqueID >> student_see.count_sessions >> max_ex;
+		student_see.term = new Session[student_see.count_sessions];
+		for (int j = 0; j < student_see.count_sessions; j++) {
+			student_see.term[j].session = new Exam[max_ex];
+		}
+
+		for (int j = 0; j < student_see.count_sessions; j++) {
+			for (int k = 0; k < max_ex + 1; k++) {
+				get >> symbol;
+				if (symbol == "|") {
+					break;
+				}
+				student_see.term[j].session[k].subject = symbol;
+				get >> student_see.term[j].session[k].mark;
+			}
+		}
+
+		if (IDlist.find_item(student_see.uniqueID)) {
+			cout << endl << student_see.uniqueID << ": ";
+			student_see.printSession(max_ex); cout << endl << endl;
+		}
+
+	}
+	get.close();
+}
+
 void MainMenu() {
 	while (true) {
 		cout << "========== ГЛАВНОЕ МЕНЮ ==========" << endl;
@@ -666,7 +718,8 @@ void MainMenu() {
 		cout << "3 - Показать    данные    студента" << endl;
 		cout << "4 - Изменить    данные    студента" << endl;
 		cout << "5 - Удалить     данные    студента" << endl;
-		cout << "6 - Выйти       из       программы" << endl << endl;
+		cout << "6 - Выполнить задание по  варианту" << endl;
+		cout << "7 - Выйти       из       программы" << endl << endl;
 
 		if (line_count_Student() == 0) {
 			cout << "База данных пуста! Вывод, изменение и удаление данных не доступны!" << endl;
@@ -701,7 +754,12 @@ void MainMenu() {
 				Return = false;
 				break;
 			case 6:
+				task();
+				Return = false;
+				break;
+			case 7:
 				cout << "До свидания!" << endl;
+				/*Crypt();*/
 				exit(0);
 			default:
 				cout << "Действие не определено. Повторите выбор действия." << endl;
@@ -714,5 +772,6 @@ void MainMenu() {
 int main()
 {
 	SetConsoleCP(1251); SetConsoleOutputCP(1251);
+	/*Decrypt();*/
 	MainMenu();
 }
