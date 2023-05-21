@@ -731,7 +731,6 @@ void task(){
 	int max = 0, min = 100;
 	ifstream ing("GoodMark_temp.txt");
 	for (int i = 0; i < Line_c_good; i++) {
-		Student student_see;
 		ing >> ID >> proportion;
 		if (proportion>max) {
 			max = proportion;
@@ -750,8 +749,7 @@ void task(){
 	min = 100; max = 0;
 
 	ifstream inb("BadMark_temp.txt");
-	for (int i = 0; i < Line_c_good; i++) {
-		Student student_see;
+	for (int i = 0; i < Line_c_bad; i++) {
 		inb >> ID >> proportion;
 		if (proportion > max) {
 			max = proportion;
