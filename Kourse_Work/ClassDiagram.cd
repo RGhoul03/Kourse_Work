@@ -24,7 +24,7 @@
   <Class Name="List">
     <Position X="10.75" Y="1" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAgAAAAAAAAAAAAAAAAAAEAAAAAAgAAAAAAAI=</HashCode>
+      <HashCode>AAAAAAAAgAAAAAAAAAAAAAAAAAAEAAAAAAgAAAAAAII=</HashCode>
       <FileName>Task.h</FileName>
     </TypeIdentifier>
   </Class>
@@ -35,11 +35,11 @@
       <FileName>Session_Class.h</FileName>
     </TypeIdentifier>
   </Struct>
-  <Struct Name="student">
-    <Position X="3.75" Y="2.5" Width="1.5" />
+  <Struct Name="Node">
+    <Position X="10.75" Y="3" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAAAUAAQAAAAAAAAAAAAAAAAAAAA=</HashCode>
-      <FileName>Kourse_Work.cpp</FileName>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAIAAAA=</HashCode>
+      <FileName>Task.h</FileName>
     </TypeIdentifier>
   </Struct>
   <Struct Name="StudyPlace">
@@ -49,11 +49,11 @@
       <FileName>Kourse_Work.cpp</FileName>
     </TypeIdentifier>
   </Struct>
-  <Struct Name="Node">
-    <Position X="10.75" Y="3" Width="1.5" />
+  <Struct Name="student">
+    <Position X="3.75" Y="2.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAIAAAA=</HashCode>
-      <FileName>Task.h</FileName>
+      <HashCode>AAAAAAAAAAAAAAAAAAAUAAQAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Kourse_Work.cpp</FileName>
     </TypeIdentifier>
   </Struct>
   <Font Name="Segoe UI" Size="9" />

@@ -17,18 +17,18 @@ public:
     
     void addNode(string ID)
     {
-        Node* nd = new Node; //динамически создаем новый узел
-        nd->data = ID;        //задаем узлу данные
-        nd->next = NULL;     //новый узел в конце, поэтому NULL
-        if (head == NULL)     //если создаем первый узел
+        Node* nd = new Node;
+        nd->data = ID;
+        nd->next = NULL;
+        if (head == NULL)
             head = nd;
-        else                 //если узел уже не первый
+        else
         {
             Node* current = head;
-            //ищем в цикле предшествующий последнему узел
+
             while (current->next != NULL)
                 current = current->next;
-            //предшествующий указывает на последний
+
             current->next = nd;
         }
     }
